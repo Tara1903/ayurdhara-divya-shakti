@@ -10,7 +10,7 @@ export function CartButton() {
   return (
     <Link
       href="/cart"
-      className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur md:border-[var(--color-line)] md:bg-white/75 md:text-[var(--color-forest)]"
+      className="inline-flex items-center gap-2 rounded-full border border-[var(--color-line)] bg-white/72 px-4 py-2 text-sm font-medium text-[var(--color-forest)] backdrop-blur"
     >
       <ShoppingBag className="h-4 w-4" />
       <span>Cart</span>

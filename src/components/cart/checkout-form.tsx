@@ -37,7 +37,7 @@ export function CheckoutForm() {
           </h2>
           <p className="max-w-xl text-sm leading-7 text-[var(--color-muted)]">
             We keep checkout simple: name, phone, address, and your selected
-            kit summary.
+            order summary.
           </p>
         </div>
 
@@ -99,7 +99,7 @@ export function CheckoutForm() {
             Order Summary
           </p>
           <h3 className="font-serif-display text-3xl text-[var(--color-ink)]">
-            Your selected wellness system
+            Your selected wellness routine
           </h3>
         </div>
         <div className="mt-8 space-y-4">

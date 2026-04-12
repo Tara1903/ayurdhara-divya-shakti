@@ -12,10 +12,11 @@ export function Reveal({
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
+      initial={false}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 0.5, delay }}
+      style={{ opacity: 1, transform: "translateY(0px)" }}
     >
       {children}
     </motion.div>

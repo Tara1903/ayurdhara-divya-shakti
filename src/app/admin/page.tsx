@@ -1,11 +1,24 @@
+import type { Metadata } from "next";
 import { BarChart3, Clock3, IndianRupee, PackageSearch } from "lucide-react";
 import { AdminShell } from "@/components/admin/admin-shell";
-import { getAdminSetupState, requireAdmin } from "@/lib/admin-auth";
+import {
+  getAdminSetupState,
+  isPreviewAdminAuth,
+  requireAdmin,
+} from "@/lib/admin-auth";
+import { BRAND } from "@/lib/brand";
 import { getDashboardStats, listOrders, listProducts } from "@/lib/repositories";
 import { isSupabaseConfigured } from "@/lib/supabase";
 import { formatCurrency } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
+export const metadata: Metadata = {
+  title: `Admin Dashboard | ${BRAND.name}`,
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default async function AdminDashboardPage() {
   await requireAdmin();
@@ -14,6 +27,7 @@ export default async function AdminDashboardPage() {
     listOrders(),
     listProducts(),
   ]);
+  const previewAuth = isPreviewAdminAuth();
 
   const statusCards = [
     {
@@ -63,8 +77,14 @@ export default async function AdminDashboardPage() {
           <div className="mt-5 grid gap-4">
             <StatusRow
               label="Admin Credentials"
-              value={getAdminSetupState() ? "Configured" : "Missing ADMIN_* env values"}
-              healthy={getAdminSetupState()}
+              value={
+                getAdminSetupState()
+                  ? "Configured"
+                  : previewAuth
+                    ? "Local preview credentials active"
+                    : "Missing ADMIN_* env values"
+              }
+              healthy={getAdminSetupState() || previewAuth}
             />
             <StatusRow
               label="Supabase Backend"

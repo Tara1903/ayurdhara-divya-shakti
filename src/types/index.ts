@@ -1,16 +1,19 @@
 export type OrderStatus = "pending" | "shipped" | "delivered";
 
-export type ProductCategory =
-  | "full-body-wellness"
-  | "muscle-recovery-energy"
-  | "queen-beauty-hormonal-balance"
-  | "vridh-strength-joint-care"
-  | "kids-growth-immunity"
-  | "daily-health-balance";
+export type ProductType =
+  | "wellness-kit"
+  | "herbal-powder"
+  | "herbal-oil"
+  | "raw-herb"
+  | "combo";
 
-export interface ProductOil {
+export type ProductCategory = string;
+
+export interface ProductItem {
   name: string;
   purpose: string;
+  format?: string;
+  group?: string;
 }
 
 export interface ProductFaq {
@@ -24,7 +27,9 @@ export interface Product {
   name: string;
   shortBenefit: string;
   description: string;
+  type: ProductType;
   category: ProductCategory;
+  subcategory?: string;
   image: string;
   problemStatement: string;
   benefits: string[];
@@ -32,11 +37,19 @@ export interface Product {
   usageMethod: string[];
   whoShouldUse: string[];
   expectedTimeline: string[];
-  whatsInside: ProductOil[];
+  whatsInside: ProductItem[];
   faqs: ProductFaq[];
   price: number;
   originalPrice: number;
   durationLabel: string;
+  badge?: string;
+  limitedStockText?: string;
+  therapyLabel?: string;
+  supportLine?: string;
+  saveAmount?: number;
+  relatedSlugs?: string[];
+  seoTitle?: string;
+  seoDescription?: string;
 }
 
 export interface CartItem {
@@ -80,4 +93,25 @@ export interface Testimonial {
   name: string;
   location: string;
   quote: string;
+  rating: number;
+  concern?: string;
+}
+
+export interface CollectionPageContent {
+  slug: string;
+  title: string;
+  eyebrow: string;
+  description: string;
+  heroTitle: string;
+  heroDescription: string;
+  type: ProductType;
+  highlight: string;
+  featuredCategories: string[];
+}
+
+export interface IconCategory {
+  label: string;
+  description: string;
+  href: string;
+  badge?: string;
 }

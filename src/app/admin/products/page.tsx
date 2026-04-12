@@ -1,9 +1,18 @@
+import type { Metadata } from "next";
 import { AdminShell } from "@/components/admin/admin-shell";
 import { ProductEditorForm } from "@/components/admin/product-editor-form";
 import { requireAdmin } from "@/lib/admin-auth";
+import { BRAND } from "@/lib/brand";
 import { listProducts } from "@/lib/repositories";
 
 export const dynamic = "force-dynamic";
+export const metadata: Metadata = {
+  title: `Admin Products | ${BRAND.name}`,
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default async function AdminProductsPage() {
   await requireAdmin();
@@ -12,7 +21,7 @@ export default async function AdminProductsPage() {
   return (
     <AdminShell
       title="Product Management"
-      description="Create, refine, and manage the six Nabhi therapy kits with all product messaging and structured details in one place."
+      description="Create, refine, and manage wellness kits, support products, and bundle offers with structured product details in one place."
     >
       <div className="grid gap-6">
         <ProductEditorForm />

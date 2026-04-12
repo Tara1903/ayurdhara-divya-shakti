@@ -12,7 +12,7 @@ type OrderSuccessPageProps = {
 
 export const metadata: Metadata = {
   title: `Order Success | ${BRAND.name}`,
-  description: "Your Ayurdhara Divya Shakti order has been received successfully.",
+  description: "Your Ayurdhara Divya Shakti wellness order has been received successfully.",
 };
 
 export default async function OrderSuccessPage({
@@ -31,7 +31,7 @@ export default async function OrderSuccessPage({
         </div>
         <p className="mt-6 eyebrow">Order Confirmed</p>
         <h1 className="mt-4 font-serif-display text-5xl text-[var(--color-ink)]">
-          Your healing kit order is in.
+          Your wellness order is in.
         </h1>
         <p className="mx-auto mt-4 max-w-xl text-base leading-8 text-[var(--color-muted)]">
           We have received your Cash on Delivery request and will follow up using
@@ -48,7 +48,7 @@ export default async function OrderSuccessPage({
         </div>
 
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-          <Link href="/kits" className={buttonStyles()}>
+          <Link href="/wellness-kits" className={buttonStyles()}>
             Continue Shopping
           </Link>
           <a

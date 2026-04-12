@@ -16,14 +16,14 @@ export function CartPageView() {
         <div className="section-frame mx-auto max-w-3xl px-6 py-12 text-center md:px-10">
           <p className="eyebrow">Cart Empty</p>
           <h1 className="mt-4 font-serif-display text-4xl text-[var(--color-ink)] md:text-5xl">
-            Your healing cart is waiting.
+            Your wellness cart is waiting.
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-base leading-7 text-[var(--color-muted)]">
-            Explore the 5+1 Nabhi Therapy kits and choose the daily ritual that
-            fits your current lifestyle concern.
+            Explore the 9-in-1 wellness kits and supporting powders, oils, and combos
+            built around a clearer daily ritual.
           </p>
           <div className="mt-8 flex justify-center">
-            <Link href="/kits" className={buttonStyles()}>
+            <Link href="/wellness-kits" className={buttonStyles()}>
               Explore Wellness Kits
             </Link>
           </div>
@@ -37,11 +37,11 @@ export function CartPageView() {
       <div className="mb-10 max-w-2xl space-y-3">
         <p className="eyebrow">Cart</p>
         <h1 className="font-serif-display text-5xl text-[var(--color-ink)]">
-          Review your selected wellness system.
+          Review your selected wellness routine.
         </h1>
         <p className="text-base leading-7 text-[var(--color-muted)]">
-          Each kit is built as a complete 30-60 day healing ritual, with Cash on
-          Delivery available at checkout.
+          Wellness kits lead the cart, while powders, oils, and combos support the
+          routine with clean, premium add-ons.
         </p>
       </div>
 
@@ -64,7 +64,7 @@ export function CartPageView() {
 
               <div className="flex flex-col justify-between gap-5">
                 <div className="space-y-2">
-                  <p className="eyebrow">5+1 Nabhi Therapy Kit</p>
+                  <p className="eyebrow">{product.therapyLabel ?? "Wellness Product"}</p>
                   <h2 className="font-serif-display text-3xl text-[var(--color-ink)]">
                     {product.name}
                   </h2>
@@ -141,7 +141,7 @@ export function CartPageView() {
               Proceed to Checkout
             </Link>
             <Link
-              href="/kits"
+              href="/wellness-kits"
               className={buttonStyles({ variant: "secondary", className: "w-full" })}
             >
               Continue Shopping

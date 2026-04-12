@@ -10,7 +10,7 @@ export default function NotFound() {
           This page slipped out of the ritual.
         </h1>
         <p className="mx-auto mt-4 max-w-xl text-base leading-7 text-[var(--color-muted)]">
-          Return to the storefront to explore the premium Nabhi Therapy wellness kits.
+          Return to the storefront to explore the premium wellness kits and supporting Ayurvedic ranges.
         </p>
         <div className="mt-8">
           <Link href="/" className={buttonStyles()}>

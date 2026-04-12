@@ -1,12 +1,21 @@
+import type { Metadata } from "next";
 import { updateOrderStatusAction } from "@/app/actions/admin";
 import { AdminShell } from "@/components/admin/admin-shell";
 import { buttonStyles } from "@/components/ui/button";
 import { requireAdmin } from "@/lib/admin-auth";
+import { BRAND } from "@/lib/brand";
 import { listOrders } from "@/lib/repositories";
 import { formatCurrency } from "@/lib/utils";
 
 const statuses = ["pending", "shipped", "delivered"] as const;
 export const dynamic = "force-dynamic";
+export const metadata: Metadata = {
+  title: `Admin Orders | ${BRAND.name}`,
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default async function AdminOrdersPage() {
   await requireAdmin();

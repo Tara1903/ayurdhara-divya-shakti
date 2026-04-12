@@ -4,7 +4,7 @@ import { BRAND } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: `Cart | ${BRAND.name}`,
-  description: "Review your selected Ayurdhara Divya Shakti wellness kits before checkout.",
+  description: "Review your selected Ayurdhara Divya Shakti wellness items before checkout.",
 };
 
 export default function CartPage() {

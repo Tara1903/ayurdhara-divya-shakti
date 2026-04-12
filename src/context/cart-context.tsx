@@ -24,15 +24,25 @@ type CartContextValue = {
 const STORAGE_KEY = "ayurdhara-cart-v1";
 const STORAGE_EVENT = "ayurdhara-cart-updated";
 const CartContext = createContext<CartContextValue | null>(null);
+const EMPTY_ITEMS: CartItem[] = [];
+
+let cachedSerializedItems: string | null = null;
+let cachedItems: CartItem[] = EMPTY_ITEMS;
 
 function readStoredItems(): CartItem[] {
   if (typeof window === "undefined") {
-    return [];
+    return EMPTY_ITEMS;
   }
 
   const stored = window.localStorage.getItem(STORAGE_KEY);
   if (!stored) {
-    return [];
+    cachedSerializedItems = null;
+    cachedItems = EMPTY_ITEMS;
+    return cachedItems;
+  }
+
+  if (stored === cachedSerializedItems) {
+    return cachedItems;
   }
 
   try {
@@ -44,7 +54,7 @@ function readStoredItems(): CartItem[] {
         }
     >;
 
-    return parsed
+    const nextItems = parsed
       .map((item) => {
         if ("product" in item && item.product) {
           return item as CartItem;
@@ -66,8 +76,14 @@ function readStoredItems(): CartItem[] {
           : null;
       })
       .filter(Boolean) as CartItem[];
+
+    cachedSerializedItems = stored;
+    cachedItems = nextItems.length ? nextItems : EMPTY_ITEMS;
+    return cachedItems;
   } catch {
-    return [];
+    cachedSerializedItems = null;
+    cachedItems = EMPTY_ITEMS;
+    return cachedItems;
   }
 }
 
@@ -76,7 +92,10 @@ function writeStoredItems(items: CartItem[]) {
     return;
   }
 
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+  const serializedItems = JSON.stringify(items);
+  cachedSerializedItems = serializedItems;
+  cachedItems = items.length ? items : EMPTY_ITEMS;
+  window.localStorage.setItem(STORAGE_KEY, serializedItems);
   window.dispatchEvent(new Event(STORAGE_EVENT));
 }
 
@@ -95,11 +114,15 @@ function subscribeToCartStore(onStoreChange: () => void) {
   };
 }
 
+function getServerCartSnapshot() {
+  return EMPTY_ITEMS;
+}
+
 export function CartProvider({ children }: { children: ReactNode }) {
   const items = useSyncExternalStore(
     subscribeToCartStore,
     readStoredItems,
-    () => [],
+    getServerCartSnapshot,
   );
 
   const detailedItems = useMemo(

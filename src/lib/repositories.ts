@@ -1,6 +1,15 @@
 import "server-only";
 
 import { products, sampleOrders } from "@/lib/data";
+import {
+  changePreviewOrderStatus,
+  createPreviewOrder,
+  getPreviewProductBySlug,
+  listPreviewOrders,
+  listPreviewProducts,
+  removePreviewProduct,
+  upsertPreviewProduct,
+} from "@/lib/local-preview-store";
 import { getSupabaseAdmin, isSupabaseConfigured } from "@/lib/supabase";
 import { slugify } from "@/lib/utils";
 import type {
@@ -17,7 +26,9 @@ type ProductRow = {
   name: string;
   short_benefit: string;
   description: string;
+  type?: Product["type"];
   category: Product["category"];
+  subcategory?: string | null;
   image: string;
   problem_statement: string;
   benefits: string[];
@@ -30,6 +41,13 @@ type ProductRow = {
   price: number;
   original_price: number;
   duration_label: string;
+  badge?: string | null;
+  limited_stock_text?: string | null;
+  therapy_label?: string | null;
+  support_line?: string | null;
+  related_slugs?: string[] | null;
+  seo_title?: string | null;
+  seo_description?: string | null;
 };
 
 type OrderRow = {
@@ -56,7 +74,9 @@ function mapProductRow(row: ProductRow): Product {
     name: row.name,
     shortBenefit: row.short_benefit,
     description: row.description,
+    type: row.type ?? "wellness-kit",
     category: row.category,
+    subcategory: row.subcategory ?? undefined,
     image: row.image,
     problemStatement: row.problem_statement,
     benefits: row.benefits,
@@ -69,6 +89,14 @@ function mapProductRow(row: ProductRow): Product {
     price: row.price,
     originalPrice: row.original_price,
     durationLabel: row.duration_label,
+    badge: row.badge ?? undefined,
+    limitedStockText: row.limited_stock_text ?? undefined,
+    therapyLabel: row.therapy_label ?? undefined,
+    supportLine: row.support_line ?? undefined,
+    relatedSlugs: row.related_slugs ?? undefined,
+    seoTitle: row.seo_title ?? undefined,
+    seoDescription: row.seo_description ?? undefined,
+    saveAmount: Math.max(row.original_price - row.price, 0),
   };
 }
 
@@ -111,7 +139,7 @@ export async function listProducts() {
   const client = getSupabaseAdmin();
 
   if (!client) {
-    return products;
+    return listPreviewProducts();
   }
 
   const { data, error } = await client
@@ -131,18 +159,18 @@ export async function getProductBySlug(slug: string) {
   const client = getSupabaseAdmin();
 
   if (!client) {
-    return products.find((product) => product.slug === slug) ?? null;
+    return getPreviewProductBySlug(slug);
   }
 
   const { data } = await client.from("products").select("*").eq("slug", slug).maybeSingle();
-  return data ? mapProductRow(data as ProductRow) : products.find((product) => product.slug === slug) ?? null;
+  return data ? mapProductRow(data as ProductRow) : getPreviewProductBySlug(slug);
 }
 
 export async function listOrders() {
   const client = getSupabaseAdmin();
 
   if (!client) {
-    return sampleOrders;
+    return listPreviewOrders();
   }
 
   const { data, error } = await client
@@ -167,6 +195,10 @@ export async function getDashboardStats(): Promise<DashboardStats> {
 }
 
 export async function createOrder(payload: CheckoutPayload) {
+  if (!isSupabaseConfigured()) {
+    return createPreviewOrder(payload);
+  }
+
   const client = requireDatabase();
   const orderNumber = `ADS-${Date.now().toString().slice(-6)}`;
   const totalPrice = payload.items.reduce(
@@ -212,6 +244,15 @@ export async function createOrder(payload: CheckoutPayload) {
 }
 
 export async function upsertProduct(input: Partial<Product> & { name: string }) {
+  if (!isSupabaseConfigured()) {
+    upsertPreviewProduct({
+      ...input,
+      id: input.id ?? crypto.randomUUID(),
+      slug: input.slug ?? slugify(input.name),
+    });
+    return;
+  }
+
   const client = requireDatabase();
   const id = input.id ?? crypto.randomUUID();
   const slug = input.slug ?? slugify(input.name);
@@ -222,7 +263,9 @@ export async function upsertProduct(input: Partial<Product> & { name: string }) 
     name: input.name,
     short_benefit: input.shortBenefit ?? "",
     description: input.description ?? "",
-    category: input.category ?? "daily-health-balance",
+    type: input.type ?? "wellness-kit",
+    category: input.category ?? "Parivar Swasthya",
+    subcategory: input.subcategory ?? null,
     image: input.image ?? "",
     problem_statement: input.problemStatement ?? "",
     benefits: input.benefits ?? [],
@@ -233,8 +276,15 @@ export async function upsertProduct(input: Partial<Product> & { name: string }) 
     whats_inside: input.whatsInside ?? [],
     faqs: input.faqs ?? [],
     price: input.price ?? 2499,
-    original_price: input.originalPrice ?? 4100,
-    duration_label: input.durationLabel ?? "Complete 30-60 Day Healing System",
+    original_price: input.originalPrice ?? 2699,
+    duration_label: input.durationLabel ?? "30-45 day guided wellness routine",
+    badge: input.badge ?? null,
+    limited_stock_text: input.limitedStockText ?? null,
+    therapy_label: input.therapyLabel ?? null,
+    support_line: input.supportLine ?? null,
+    related_slugs: input.relatedSlugs ?? [],
+    seo_title: input.seoTitle ?? null,
+    seo_description: input.seoDescription ?? null,
     is_active: true,
   };
 
@@ -245,6 +295,11 @@ export async function upsertProduct(input: Partial<Product> & { name: string }) 
 }
 
 export async function removeProduct(id: string) {
+  if (!isSupabaseConfigured()) {
+    removePreviewProduct(id);
+    return;
+  }
+
   const client = requireDatabase();
   const { error } = await client.from("products").delete().eq("id", id);
   if (error) {
@@ -253,6 +308,11 @@ export async function removeProduct(id: string) {
 }
 
 export async function changeOrderStatus(id: string, status: OrderStatus) {
+  if (!isSupabaseConfigured()) {
+    changePreviewOrderStatus(id, status);
+    return;
+  }
+
   const client = requireDatabase();
   const { error } = await client.from("orders").update({ status }).eq("id", id);
   if (error) {

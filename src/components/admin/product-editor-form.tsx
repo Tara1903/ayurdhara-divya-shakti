@@ -14,12 +14,33 @@ import type { Product } from "@/types";
 const initialState: AdminActionState = {};
 
 const categories = [
-  { value: "full-body-wellness", label: "Full Body Wellness Kit" },
-  { value: "muscle-recovery-energy", label: "Muscle Recovery & Energy Kit" },
-  { value: "queen-beauty-hormonal-balance", label: "Queen Beauty & Hormonal Balance Kit" },
-  { value: "vridh-strength-joint-care", label: "Vridh Strength & Joint Care Kit" },
-  { value: "kids-growth-immunity", label: "Kids Growth & Immunity Kit" },
-  { value: "daily-health-balance", label: "Daily Health Balance Kit" },
+  { value: "Purush Shakti", label: "Purush Shakti" },
+  { value: "Stree Arogya", label: "Stree Arogya" },
+  { value: "Bal Sanrakshan", label: "Bal Sanrakshan" },
+  { value: "Vriddha Seva", label: "Vriddha Seva" },
+  { value: "Parivar Swasthya", label: "Parivar Swasthya" },
+  { value: "Ayur Therapy", label: "Ayur Therapy" },
+  { value: "Immunity", label: "Immunity" },
+  { value: "Hair Care", label: "Hair Care" },
+  { value: "Skin Care", label: "Skin Care" },
+  { value: "Digestion", label: "Digestion" },
+  { value: "Energy", label: "Energy" },
+  { value: "Nabhi Oils", label: "Nabhi Oils" },
+  { value: "Feet Oils", label: "Feet Oils" },
+  { value: "Nasal Oils", label: "Nasal Oils" },
+  { value: "Hair Oils", label: "Hair Oils" },
+  { value: "Body Oils", label: "Body Oils" },
+  { value: "Roots", label: "Roots" },
+  { value: "Leaves", label: "Leaves" },
+  { value: "Fruits", label: "Fruits" },
+  { value: "Seeds", label: "Seeds" },
+  { value: "Bark", label: "Bark" },
+  { value: "Flowers", label: "Flowers" },
+  { value: "Hair Combo", label: "Hair Combo" },
+  { value: "Skin Combo", label: "Skin Combo" },
+  { value: "Immunity Combo", label: "Immunity Combo" },
+  { value: "Weight Loss Combo", label: "Weight Loss Combo" },
+  { value: "Family Combo", label: "Family Combo" },
 ] as const;
 
 function joinLines(values?: string[]) {
@@ -45,7 +66,7 @@ export function ProductEditorForm({ product }: { product?: Product }) {
         <div className="mt-2 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div>
             <h2 className="font-serif-display text-3xl text-[var(--color-ink)]">
-              {product?.name ?? "Create a new Nabhi therapy kit"}
+              {product?.name ?? "Create a new wellness product"}
             </h2>
             <p className="mt-2 max-w-2xl text-sm leading-7 text-[var(--color-muted)]">
               Use one line per bullet item. For “What&apos;s inside” and FAQ rows,
@@ -76,20 +97,20 @@ export function ProductEditorForm({ product }: { product?: Product }) {
               name="name"
               required
               defaultValue={product?.name ?? ""}
-              placeholder="Full Body Wellness Kit"
+              placeholder="Purush Shakti 9-in-1 Wellness Kit"
             />
           </Field>
           <Field label="Slug">
             <input
               name="slug"
               defaultValue={product?.slug ?? ""}
-              placeholder="full-body-wellness-kit"
+              placeholder="purush-shakti-9-in-1-wellness-kit"
             />
           </Field>
           <Field label="Category">
             <select
               name="category"
-              defaultValue={product?.category ?? "daily-health-balance"}
+              defaultValue={product?.category ?? "Parivar Swasthya"}
             >
               {categories.map((category) => (
                 <option key={category.value} value={category.value}>
@@ -118,14 +139,14 @@ export function ProductEditorForm({ product }: { product?: Product }) {
               name="originalPrice"
               type="number"
               min={0}
-              defaultValue={product?.originalPrice ?? 4100}
+              defaultValue={product?.originalPrice ?? 2699}
             />
           </Field>
           <Field label="Duration Label" className="md:col-span-2">
             <input
               name="durationLabel"
-              defaultValue={product?.durationLabel ?? "Complete 30-60 Day Healing System"}
-              placeholder="Complete 30-60 Day Healing System"
+              defaultValue={product?.durationLabel ?? "30-45 day guided wellness routine"}
+              placeholder="30-45 day guided wellness routine"
             />
           </Field>
           <Field label="Short Benefit" className="md:col-span-2">

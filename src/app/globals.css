@@ -1,19 +1,19 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f5efe4;
-  --surface: #fcf8f1;
-  --surface-strong: #fffdf8;
-  --foreground: #1d241f;
-  --forest: #163625;
-  --forest-deep: #0f2619;
-  --gold: #b98b3f;
-  --gold-soft: #dfc289;
-  --muted: #5d665e;
-  --line: rgba(49, 63, 49, 0.12);
-  --line-strong: rgba(49, 63, 49, 0.2);
-  --warm-shadow: 0 20px 70px rgba(63, 44, 14, 0.08);
-  --hero-shadow: 0 30px 100px rgba(18, 39, 27, 0.16);
+  --background: #f6f1e7;
+  --surface: #fbf7f0;
+  --surface-strong: #fffdf9;
+  --foreground: #182318;
+  --forest: #2e7d32;
+  --forest-deep: #1c5c24;
+  --gold: #d4af37;
+  --gold-soft: #e7d18b;
+  --muted: #596357;
+  --line: rgba(46, 87, 54, 0.13);
+  --line-strong: rgba(46, 87, 54, 0.22);
+  --warm-shadow: 0 22px 60px rgba(56, 47, 22, 0.08);
+  --hero-shadow: 0 28px 110px rgba(36, 64, 34, 0.16);
 }
 
 @theme inline {
@@ -36,15 +36,15 @@
 html {
   scroll-behavior: smooth;
   background:
-    radial-gradient(circle at top right, rgba(185, 139, 63, 0.12), transparent 30%),
-    radial-gradient(circle at left 20%, rgba(22, 54, 37, 0.08), transparent 24%),
+    radial-gradient(circle at top right, rgba(212, 175, 55, 0.12), transparent 30%),
+    radial-gradient(circle at left 20%, rgba(46, 125, 50, 0.08), transparent 24%),
     var(--background);
 }
 
 body {
   min-height: 100vh;
   background:
-    linear-gradient(180deg, rgba(255, 250, 241, 0.82) 0%, rgba(245, 239, 228, 0.94) 100%),
+    linear-gradient(180deg, rgba(255, 252, 246, 0.84) 0%, rgba(246, 241, 231, 0.96) 100%),
     var(--background);
   color: var(--foreground);
   font-family: var(--font-body), sans-serif;
@@ -135,10 +135,32 @@ details summary::-webkit-details-marker {
 
   .hero-glow {
     background:
-      radial-gradient(circle at top, rgba(223, 194, 137, 0.5), transparent 46%),
-      radial-gradient(circle at 20% 20%, rgba(25, 81, 49, 0.2), transparent 34%),
-      linear-gradient(145deg, rgba(255, 252, 246, 0.95), rgba(246, 236, 216, 0.88));
+      radial-gradient(circle at top, rgba(231, 209, 139, 0.42), transparent 46%),
+      radial-gradient(circle at 20% 20%, rgba(46, 125, 50, 0.18), transparent 34%),
+      linear-gradient(145deg, rgba(255, 253, 248, 0.97), rgba(248, 240, 226, 0.88));
     box-shadow: var(--hero-shadow);
+  }
+
+  .poster-surface {
+    background:
+      linear-gradient(145deg, rgba(255, 253, 249, 0.92), rgba(245, 239, 226, 0.9)),
+      radial-gradient(circle at top right, rgba(212, 175, 55, 0.18), transparent 34%);
+    box-shadow: var(--hero-shadow);
+  }
+
+  .glass-panel {
+    border: 1px solid rgba(255, 255, 255, 0.46);
+    background: rgba(255, 255, 255, 0.54);
+    backdrop-filter: blur(18px);
+    box-shadow: 0 18px 50px rgba(56, 47, 22, 0.08);
+  }
+
+  .mobile-scroll-row {
+    scrollbar-width: none;
+  }
+
+  .mobile-scroll-row::-webkit-scrollbar {
+    display: none;
   }
 
   .gold-divider {

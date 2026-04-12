@@ -90,10 +90,10 @@ export async function saveProductAction(
     whatsInside: parsePairs(formData.get("whatsInside")),
     faqs: parseFaqs(formData.get("faqs")),
     price: Number(formData.get("price") ?? 2499),
-    originalPrice: Number(formData.get("originalPrice") ?? 4100),
+    originalPrice: Number(formData.get("originalPrice") ?? 2699),
     durationLabel:
       String(formData.get("durationLabel") ?? "").trim() ||
-      "Complete 30-60 Day Healing System",
+      "30-45 day guided wellness routine",
   };
 
   if (!payload.name) {
@@ -103,6 +103,7 @@ export async function saveProductAction(
   try {
     await upsertProduct(payload);
     revalidatePath("/kits");
+    revalidatePath("/wellness-kits");
     revalidatePath("/admin");
     revalidatePath("/admin/products");
     return { success: "Product saved successfully." };
@@ -120,6 +121,7 @@ export async function deleteProductAction(formData: FormData) {
 
   await removeProduct(id);
   revalidatePath("/kits");
+  revalidatePath("/wellness-kits");
   revalidatePath("/admin");
   revalidatePath("/admin/products");
 }

@@ -7,7 +7,13 @@ import { Button } from "@/components/ui/button";
 
 const initialState: AdminActionState = {};
 
-export function AdminLoginForm({ configured }: { configured: boolean }) {
+export function AdminLoginForm({
+  configured,
+  previewMode = false,
+}: {
+  configured: boolean;
+  previewMode?: boolean;
+}) {
   const router = useRouter();
   const [state, action, pending] = useActionState(loginAdminAction, initialState);
 
@@ -39,6 +45,13 @@ export function AdminLoginForm({ configured }: { configured: boolean }) {
         <div className="mt-6 rounded-[24px] bg-[#fff8ee] p-4 text-sm leading-7 text-[var(--color-muted)]">
           Add <code>ADMIN_EMAIL</code>, <code>ADMIN_PASSWORD</code>, and{" "}
           <code>ADMIN_SESSION_SECRET</code> to enable admin login.
+        </div>
+      ) : null}
+
+      {previewMode ? (
+        <div className="mt-6 rounded-[24px] bg-[#eff8ee] p-4 text-sm leading-7 text-[var(--color-muted)]">
+          Local preview login is enabled. Use <code>admin@ayurdhara.local</code>{" "}
+          and <code>preview123</code> while reviewing on localhost.
         </div>
       ) : null}
 

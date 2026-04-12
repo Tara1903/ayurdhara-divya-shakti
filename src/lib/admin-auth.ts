@@ -10,12 +10,34 @@ function getAdminEnv() {
   const email = process.env.ADMIN_EMAIL;
   const password = process.env.ADMIN_PASSWORD;
   const secret = process.env.ADMIN_SESSION_SECRET;
+  const isDevelopment = process.env.NODE_ENV !== "production";
+
+  if (!email || !password || !secret) {
+    if (!isDevelopment) {
+      return {
+        email,
+        password,
+        secret,
+        isConfigured: false,
+        isPreview: false,
+      };
+    }
+
+    return {
+      email: "admin@ayurdhara.local",
+      password: "preview123",
+      secret: "ayurdhara-local-preview-secret",
+      isConfigured: true,
+      isPreview: true,
+    };
+  }
 
   return {
     email,
     password,
     secret,
     isConfigured: Boolean(email && password && secret),
+    isPreview: false,
   };
 }
 
@@ -90,5 +112,10 @@ export async function requireAdmin() {
 }
 
 export function getAdminSetupState() {
-  return getAdminEnv().isConfigured;
+  const env = getAdminEnv();
+  return env.isConfigured && !env.isPreview;
+}
+
+export function isPreviewAdminAuth() {
+  return getAdminEnv().isPreview;
 }

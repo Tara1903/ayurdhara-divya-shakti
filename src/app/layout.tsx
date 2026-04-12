@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { Cormorant_Garamond, Manrope } from "next/font/google";
 import { SiteFooter } from "@/components/brand/site-footer";
 import { SiteHeader } from "@/components/brand/site-header";
+import { StickyWhatsAppButton } from "@/components/brand/sticky-whatsapp-button";
 import { BRAND } from "@/lib/brand";
+import { getSiteUrl } from "@/lib/site";
 import { Providers } from "./providers";
 import "./globals.css";
 
@@ -19,14 +21,27 @@ const bodyFont = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: `${BRAND.name} | Premium Ayurvedic Nabhi Wellness Kits`,
+  metadataBase: new URL(getSiteUrl()),
+  title: `${BRAND.name} | ${BRAND.tagline}`,
   description:
-    "Ancient Ayurvedic healing system for modern lifestyle problems. Explore premium 5+1 Nabhi Therapy wellness kits designed for stress, sleep, digestion, immunity, beauty, recovery, and daily balance.",
+    "Premium Ayurvedic wellness platform built around 9-in-1 wellness kits, herbal powders, herbal oils, raw herbs, and bundle-led rituals for everyday balance.",
+  keywords: [
+    "Ayurvedic wellness kit",
+    "herbal therapy",
+    "nabhi oil",
+    "feet oil",
+    "Ayurdhara Divya Shakti",
+  ],
   openGraph: {
-    title: `${BRAND.name} | Premium Ayurvedic Nabhi Wellness Kits`,
+    title: `${BRAND.name} | ${BRAND.tagline}`,
     description:
-      "Premium Ayurvedic 5+1 Nabhi Therapy wellness kits for modern lifestyle healing.",
+      "Complete 9-in-1 Ayurvedic wellness kits with Nabhi + Feet + Herbal Powder therapy for total body balance.",
     type: "website",
+    url: "/",
+    siteName: BRAND.name,
+  },
+  alternates: {
+    canonical: "/",
   },
 };
 
@@ -43,6 +58,7 @@ export default function RootLayout({
             <SiteHeader />
             <main>{children}</main>
             <SiteFooter />
+            <StickyWhatsAppButton />
           </div>
         </Providers>
       </body>

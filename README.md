@@ -38,12 +38,22 @@ cp .env.example .env.local
 3. Fill these variables:
 
 ```env
+NEXT_PUBLIC_SITE_URL=
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
 ADMIN_EMAIL=
 ADMIN_PASSWORD=
 ADMIN_SESSION_SECRET=
+```
+
+If you want to review locally before wiring infrastructure, the storefront will
+run in preview mode without Supabase. Checkout stores preview orders in memory,
+and admin login uses these localhost-only demo credentials:
+
+```env
+Email: admin@ayurdhara.local
+Password: preview123
 ```
 
 4. Run the app:
@@ -53,6 +63,9 @@ npm run dev
 ```
 
 5. Open [http://localhost:3000](http://localhost:3000)
+
+`NEXT_PUBLIC_SITE_URL` should be your final production domain or Vercel project URL so
+metadata, sitemap, and robots.txt point to the correct site.
 
 ## Supabase setup
 
@@ -82,3 +95,23 @@ Then open:
 npm run lint
 npm run build
 ```
+
+## Production deployment
+
+1. Create a new Supabase project and run:
+
+   - `supabase/migrations/20260410_initial_schema.sql`
+   - `supabase/seed.sql`
+
+2. Add these variables in Vercel:
+
+   - `NEXT_PUBLIC_SITE_URL`
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `SUPABASE_SERVICE_ROLE_KEY`
+   - `ADMIN_EMAIL`
+   - `ADMIN_PASSWORD`
+   - `ADMIN_SESSION_SECRET`
+
+3. Import the GitHub repo into a new Vercel project.
+4. Deploy a preview build first, then promote to production once verified.
