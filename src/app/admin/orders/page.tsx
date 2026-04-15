@@ -28,14 +28,14 @@ export default async function AdminOrdersPage() {
     >
       <div className="grid gap-5">
         {orders.map((order) => (
-          <article key={order.id} className="section-frame px-6 py-6 md:px-8">
+          <article key={order.id} className="section-frame px-5 py-5 md:px-8 md:py-6">
             <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
               <div className="space-y-2">
                 <p className="eyebrow">{order.orderNumber}</p>
-                <h2 className="font-serif-display text-3xl text-[var(--color-ink)]">
+                <h2 className="font-serif-display text-[2rem] text-[var(--color-ink)] md:text-3xl">
                   {order.customerName}
                 </h2>
-                <p className="text-sm leading-7 text-[var(--color-muted)]">
+                <p className="text-sm leading-6 text-[var(--color-muted)] md:leading-7">
                   {order.phone} · {order.address}
                 </p>
                 <p className="text-sm font-medium text-[var(--color-forest)]">

@@ -10,16 +10,16 @@ export function FeaturedProductsGrid({ products }: { products: Product[] }) {
   }
 
   return (
-    <section className="page-shell section-space pb-10 pt-10 md:pt-14">
+    <section className="page-shell section-space pb-8 pt-8 md:pb-10 md:pt-14">
       <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div className="space-y-2">
           <p className="text-xs font-semibold uppercase tracking-[0.34em] text-[var(--color-gold)]">
             Featured Products
           </p>
-          <h2 className="font-serif-display text-4xl leading-[0.94] text-[var(--color-ink)] md:text-5xl">
+          <h2 className="font-serif-display text-[2.2rem] leading-[0.95] text-[var(--color-ink)] md:text-5xl">
             Shop the products people should see first.
           </h2>
-          <p className="max-w-2xl text-sm leading-7 text-[var(--color-muted)] md:text-base">
+          <p className="max-w-2xl text-sm leading-6 text-[var(--color-muted)] md:text-base md:leading-7">
             High-visibility kits and everyday add-ons placed early so visitors can start browsing instead of reading.
           </p>
         </div>
@@ -30,7 +30,7 @@ export function FeaturedProductsGrid({ products }: { products: Product[] }) {
         </Link>
       </div>
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="mt-7 grid grid-cols-2 gap-3 sm:mt-8 sm:gap-4 xl:grid-cols-4">
         {products.map((product) => (
           <ProductShowcaseCard key={product.id} product={product} variant="compact" />
         ))}

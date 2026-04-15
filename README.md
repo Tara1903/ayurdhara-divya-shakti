@@ -17,8 +17,10 @@ Premium Next.js ecommerce storefront for Ayurvedic 5+1 Nabhi Therapy wellness ki
 - Dedicated kits catalog
 - Individual product detail pages
 - Cart and Cash on Delivery checkout
+- Optional customer account auth with email/password + email OTP
+- Saved addresses, wishlist, and account order history
 - Order success flow
-- Simple admin dashboard with product and order management
+- Separate admin login and dashboard with product and order management
 - Supabase-ready product and order storage
 
 ## Local setup
@@ -56,6 +58,12 @@ Email: admin@ayurdhara.local
 Password: preview123
 ```
 
+In preview mode, customer auth is also available locally at `/auth`. You can:
+
+- create a customer account with name, email, phone, and password
+- sign in with email + password
+- test email OTP using the preview code shown in the UI
+
 4. Run the app:
 
 ```bash
@@ -77,6 +85,15 @@ Then seed the starter catalog with:
 
 - `supabase/seed.sql`
 
+Then run the customer account migration:
+
+- `supabase/migrations/20260416_customer_accounts_and_wishlist.sql`
+
+For real customer auth, enable Supabase Email auth and support:
+
+- email + password
+- email OTP / magic link
+
 ## Admin login
 
 Admin login is env-based for now. Add these values to `.env.local`:
@@ -88,6 +105,15 @@ Admin login is env-based for now. Add these values to `.env.local`:
 Then open:
 
 - `/admin/login`
+
+## Customer account routes
+
+- `/auth`
+- `/account`
+- `/account/orders`
+- `/account/profile`
+- `/account/addresses`
+- `/account/wishlist`
 
 ## Production checks
 
@@ -101,6 +127,7 @@ npm run build
 1. Create a new Supabase project and run:
 
    - `supabase/migrations/20260410_initial_schema.sql`
+   - `supabase/migrations/20260416_customer_accounts_and_wishlist.sql`
    - `supabase/seed.sql`
 
 2. Add these variables in Vercel:

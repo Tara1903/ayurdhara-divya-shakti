@@ -27,16 +27,16 @@ export function AdminLoginForm({
   return (
     <form
       action={action}
-      className="rounded-[32px] border border-[var(--color-line)] bg-white/92 p-6 shadow-[0_18px_60px_rgba(61,44,20,0.08)] md:p-8"
+      className="rounded-[28px] border border-[var(--color-line)] bg-white/92 p-5 shadow-[0_18px_60px_rgba(61,44,20,0.08)] md:rounded-[32px] md:p-8"
     >
       <div className="space-y-2">
         <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[var(--color-gold)]">
           Admin Login
         </p>
-        <h1 className="font-serif-display text-4xl text-[var(--color-ink)]">
+        <h1 className="font-serif-display text-[2.2rem] text-[var(--color-ink)] md:text-4xl">
           Secure dashboard access
         </h1>
-        <p className="text-sm leading-7 text-[var(--color-muted)]">
+        <p className="text-sm leading-6 text-[var(--color-muted)] md:leading-7">
           Use your configured admin credentials to manage products and orders.
         </p>
       </div>

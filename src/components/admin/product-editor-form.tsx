@@ -61,14 +61,14 @@ export function ProductEditorForm({ product }: { product?: Product }) {
 
   return (
     <section className="section-frame overflow-hidden">
-      <div className="border-b border-[var(--color-line)] px-6 py-5 md:px-8">
+      <div className="border-b border-[var(--color-line)] px-5 py-5 md:px-8">
         <p className="eyebrow">{isNew ? "New Product" : "Product Editor"}</p>
         <div className="mt-2 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div>
-            <h2 className="font-serif-display text-3xl text-[var(--color-ink)]">
+            <h2 className="font-serif-display text-[2rem] text-[var(--color-ink)] md:text-3xl">
               {product?.name ?? "Create a new wellness product"}
             </h2>
-            <p className="mt-2 max-w-2xl text-sm leading-7 text-[var(--color-muted)]">
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-[var(--color-muted)] md:leading-7">
               Use one line per bullet item. For “What&apos;s inside” and FAQ rows,
               separate each pair with a <code>|</code>.
             </p>
@@ -88,7 +88,7 @@ export function ProductEditorForm({ product }: { product?: Product }) {
         </div>
       </div>
 
-      <form action={action} className="grid gap-6 px-6 py-6 md:px-8 md:py-8">
+      <form action={action} className="grid gap-6 px-5 py-5 md:px-8 md:py-8">
         <input type="hidden" name="id" defaultValue={product?.id ?? ""} />
 
         <div className="grid gap-5 md:grid-cols-2">
@@ -242,7 +242,7 @@ export function ProductEditorForm({ product }: { product?: Product }) {
           </p>
         ) : null}
 
-        <div className="flex justify-end">
+        <div className="flex justify-stretch md:justify-end">
           <Button type="submit" disabled={pending}>
             {pending ? "Saving..." : isNew ? "Create Product" : "Save Changes"}
           </Button>

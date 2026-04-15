@@ -57,6 +57,46 @@ export interface CartItem {
   quantity: number;
 }
 
+export interface CustomerProfile {
+  id: string;
+  fullName: string;
+  email: string;
+  phone: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CustomerSessionSummary {
+  id: string;
+  fullName: string;
+  email: string;
+  phone: string;
+}
+
+export interface CustomerAddress {
+  id: string;
+  userId: string;
+  label: string;
+  recipientName: string;
+  phone: string;
+  line1: string;
+  line2?: string;
+  city: string;
+  state: string;
+  pincode: string;
+  country: string;
+  isDefault: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface WishlistItem {
+  userId: string;
+  productId: string;
+  createdAt: string;
+  product: Product;
+}
+
 export interface OrderItemInput {
   productId: string;
   productName: string;
@@ -68,8 +108,10 @@ export interface OrderRecord {
   id: string;
   orderNumber: string;
   customerName: string;
+  email?: string;
   phone: string;
   address: string;
+  userId?: string;
   totalPrice: number;
   status: OrderStatus;
   createdAt: string;
@@ -84,8 +126,11 @@ export interface DashboardStats {
 
 export interface CheckoutPayload {
   customerName: string;
+  email?: string;
   phone: string;
   address: string;
+  userId?: string;
+  addressId?: string;
   items: OrderItemInput[];
 }
 

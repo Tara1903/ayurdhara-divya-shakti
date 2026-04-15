@@ -54,8 +54,10 @@ type OrderRow = {
   id: string;
   order_number: string;
   customer_name: string;
+  email?: string | null;
   phone: string;
   address: string;
+  user_id?: string | null;
   total_price: number;
   status: OrderStatus;
   created_at: string;
@@ -105,8 +107,10 @@ function mapOrderRow(row: OrderRow): OrderRecord {
     id: row.id,
     orderNumber: row.order_number,
     customerName: row.customer_name,
+    email: row.email ?? undefined,
     phone: row.phone,
     address: row.address,
+    userId: row.user_id ?? undefined,
     totalPrice: row.total_price,
     status: row.status,
     createdAt: row.created_at,
@@ -175,7 +179,7 @@ export async function listOrders() {
 
   const { data, error } = await client
     .from("orders")
-    .select("id, order_number, customer_name, phone, address, total_price, status, created_at, order_items(product_id, product_name, quantity, unit_price)")
+    .select("id, order_number, customer_name, email, phone, address, user_id, total_price, status, created_at, order_items(product_id, product_name, quantity, unit_price)")
     .order("created_at", { ascending: false });
 
   if (error || !data) {
@@ -210,8 +214,10 @@ export async function createOrder(payload: CheckoutPayload) {
     .from("orders")
     .insert({
       customer_name: payload.customerName,
+      email: payload.email ?? null,
       phone: payload.phone,
       address: payload.address,
+      user_id: payload.userId ?? null,
       total_price: totalPrice,
       status: "pending",
       order_number: orderNumber,

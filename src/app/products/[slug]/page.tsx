@@ -2,11 +2,14 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { CheckCircle2, MessageCircle, ShieldCheck, Sparkles } from "lucide-react";
+import { WishlistToggleButton } from "@/components/account/wishlist-toggle-button";
 import { AddToCartButton } from "@/components/brand/add-to-cart-button";
 import { ProductCard } from "@/components/brand/product-card";
 import { PurchaseLink } from "@/components/brand/purchase-link";
 import { Reveal } from "@/components/brand/reveal";
 import { BRAND } from "@/lib/brand";
+import { hasCustomerWishlistItem } from "@/lib/customer-data";
+import { getCurrentCustomer } from "@/lib/customer-auth";
 import { getProductsBySlugs, products as fallbackProducts } from "@/lib/data";
 import { getProductBySlug } from "@/lib/repositories";
 import { buildWhatsAppUrl, formatCurrency } from "@/lib/utils";
@@ -62,10 +65,15 @@ function getProductType(type: string | undefined) {
 export default async function ProductPage({ params }: ProductPageProps) {
   const { slug } = await params;
   const product = await getProductBySlug(slug);
+  const customer = await getCurrentCustomer();
 
   if (!product) {
     notFound();
   }
+
+  const wishlistActive = customer
+    ? await hasCustomerWishlistItem(customer.id, product.id)
+    : false;
 
   const relatedProducts = getProductsBySlugs(product.relatedSlugs ?? []);
   const productType = getProductType(product.type);
@@ -80,10 +88,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   return (
     <section className="page-shell section-space">
-      <div className="grid gap-8 lg:grid-cols-[1.02fr_0.98fr]">
+      <div className="grid gap-6 lg:grid-cols-[1.02fr_0.98fr] lg:gap-8">
         <Reveal>
-          <div className="poster-surface relative overflow-hidden rounded-[40px] p-4 md:p-5">
-            <div className="relative min-h-[26rem] overflow-hidden rounded-[30px]">
+          <div className="poster-surface relative overflow-hidden rounded-[32px] p-3 md:rounded-[40px] md:p-5">
+            <div className="relative min-h-[21rem] overflow-hidden rounded-[26px] md:min-h-[26rem] md:rounded-[30px]">
               <Image
                 src={product.image}
                 alt={product.name}
@@ -104,12 +112,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
                   </span>
                 ) : null}
               </div>
-              <div className="absolute inset-x-4 bottom-4 rounded-[26px] bg-[rgba(15,31,20,0.74)] p-5 text-white backdrop-blur">
+              <div className="absolute inset-x-3 bottom-3 rounded-[22px] bg-[rgba(15,31,20,0.74)] p-4 text-white backdrop-blur md:inset-x-4 md:bottom-4 md:rounded-[26px] md:p-5">
                 <p className="text-xs uppercase tracking-[0.32em] text-[var(--color-gold-soft)]">
                   {getTypeLabel(productType)}
                 </p>
-                <p className="mt-2 font-serif-display text-4xl leading-none">{product.name}</p>
-                <p className="mt-3 text-sm leading-7 text-white/82">
+                <p className="mt-2 font-serif-display text-[2rem] leading-none md:text-4xl">{product.name}</p>
+                <p className="mt-3 text-sm leading-6 text-white/82 md:leading-7">
                   {product.supportLine ?? product.shortBenefit}
                 </p>
               </div>
@@ -121,15 +129,15 @@ export default async function ProductPage({ params }: ProductPageProps) {
           <div className="space-y-8">
             <div className="space-y-4">
               <p className="eyebrow">{product.category}</p>
-              <h1 className="font-serif-display text-5xl leading-[0.92] text-[var(--color-ink)] md:text-6xl">
+              <h1 className="font-serif-display text-[2.5rem] leading-[0.95] text-[var(--color-ink)] md:text-6xl">
                 {product.name}
               </h1>
-              <p className="max-w-2xl text-base leading-8 text-[var(--color-muted)]">
+              <p className="max-w-2xl text-sm leading-6 text-[var(--color-muted)] md:text-base md:leading-8">
                 {product.description}
               </p>
             </div>
 
-            <div className="glass-panel rounded-[30px] p-6">
+            <div className="glass-panel rounded-[28px] p-5 md:rounded-[30px] md:p-6">
               <div className="flex flex-wrap items-end gap-4">
                 <p className="text-4xl font-semibold text-[var(--color-forest)]">
                   {formatCurrency(product.price)}
@@ -142,7 +150,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 </p>
               </div>
 
-              <p className="mt-4 text-sm leading-7 text-[var(--color-muted)]">
+              <p className="mt-4 text-sm leading-6 text-[var(--color-muted)] md:leading-7">
                 {productType === "wellness-kit"
                   ? "Each kit clearly shows all 9 pieces so the buyer understands the complete system at a glance."
                   : "This support product fits into the broader Ayurdhara ritual without forcing a complicated buying decision."}
@@ -153,6 +161,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 <PurchaseLink href="/checkout" variant="secondary" className="w-full">
                   Buy Now
                 </PurchaseLink>
+                <WishlistToggleButton
+                  productId={product.id}
+                  redirectTo={`/products/${product.slug}`}
+                  active={wishlistActive}
+                />
                 <a
                   href={buildWhatsAppUrl(
                     BRAND.whatsappNumber,
@@ -176,7 +189,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="section-frame p-6">
                 <p className="eyebrow">Problem It Supports</p>
-                <p className="mt-3 text-sm leading-7 text-[var(--color-muted)]">
+                <p className="mt-3 text-sm leading-6 text-[var(--color-muted)] md:leading-7">
                   {product.problemStatement}
                 </p>
               </div>
@@ -186,7 +199,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                   {product.expectedTimeline.map((step) => (
                     <div key={step} className="flex gap-3">
                       <CheckCircle2 className="mt-1 h-5 w-5 text-[var(--color-gold)]" />
-                      <p className="text-sm leading-7 text-[var(--color-muted)]">{step}</p>
+                      <p className="text-sm leading-6 text-[var(--color-muted)] md:leading-7">{step}</p>
                     </div>
                   ))}
                 </div>
@@ -201,7 +214,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
           <section className="mt-16">
             <div className="max-w-2xl">
               <p className="eyebrow">What&apos;s Inside</p>
-              <h2 className="mt-3 font-serif-display text-5xl text-[var(--color-ink)]">
+              <h2 className="mt-3 font-serif-display text-[2.3rem] text-[var(--color-ink)] md:text-5xl">
                 See all 9 items in the system.
               </h2>
             </div>
@@ -212,10 +225,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
                   <div className="mt-5 grid gap-4">
                     {items.map((item) => (
                       <div key={item.name} className="rounded-[24px] bg-[var(--color-surface)] px-5 py-5">
-                        <h3 className="font-serif-display text-3xl text-[var(--color-ink)]">
+                        <h3 className="font-serif-display text-[2rem] text-[var(--color-ink)] md:text-3xl">
                           {item.name}
                         </h3>
-                        <p className="mt-2 text-sm leading-7 text-[var(--color-muted)]">
+                        <p className="mt-2 text-sm leading-6 text-[var(--color-muted)] md:leading-7">
                           {item.purpose}
                         </p>
                         {item.format ? (
@@ -238,10 +251,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
             <div className="mt-5 grid gap-4 lg:grid-cols-2">
               {product.whatsInside.map((item) => (
                 <div key={item.name} className="rounded-[24px] bg-[var(--color-surface)] px-5 py-5">
-                  <h3 className="font-serif-display text-3xl text-[var(--color-ink)]">
+                  <h3 className="font-serif-display text-[2rem] text-[var(--color-ink)] md:text-3xl">
                     {item.name}
                   </h3>
-                  <p className="mt-2 text-sm leading-7 text-[var(--color-muted)]">
+                  <p className="mt-2 text-sm leading-6 text-[var(--color-muted)] md:leading-7">
                     {item.purpose}
                   </p>
                   {item.format ? (
@@ -265,7 +278,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 {product.benefits.map((benefit) => (
                   <div key={benefit} className="flex gap-3">
                     <CheckCircle2 className="mt-1 h-5 w-5 text-[var(--color-gold)]" />
-                    <p className="text-sm leading-7 text-[var(--color-muted)]">{benefit}</p>
+                    <p className="text-sm leading-6 text-[var(--color-muted)] md:leading-7">{benefit}</p>
                   </div>
                 ))}
               </div>
@@ -276,7 +289,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
               <div className="mt-5 grid gap-4">
                 {product.ingredientsFeel.map((item) => (
                   <div key={item} className="rounded-[24px] bg-[var(--color-surface)] px-5 py-5">
-                    <p className="text-sm leading-7 text-[var(--color-muted)]">{item}</p>
+                    <p className="text-sm leading-6 text-[var(--color-muted)] md:leading-7">{item}</p>
                   </div>
                 ))}
               </div>
@@ -291,7 +304,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
               <div className="mt-5 grid gap-4">
                 {product.usageMethod.map((item) => (
                   <div key={item} className="rounded-[24px] bg-[var(--color-surface)] px-5 py-5">
-                    <p className="text-sm leading-7 text-[var(--color-muted)]">{item}</p>
+                    <p className="text-sm leading-6 text-[var(--color-muted)] md:leading-7">{item}</p>
                   </div>
                 ))}
               </div>
@@ -302,7 +315,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
               <div className="mt-5 grid gap-4">
                 {product.whoShouldUse.map((item) => (
                   <div key={item} className="rounded-[24px] bg-[var(--color-surface)] px-5 py-5">
-                    <p className="text-sm leading-7 text-[var(--color-muted)]">{item}</p>
+                    <p className="text-sm leading-6 text-[var(--color-muted)] md:leading-7">{item}</p>
                   </div>
                 ))}
               </div>
@@ -311,7 +324,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             <section className="glass-panel rounded-[30px] p-6">
               <div className="flex gap-3">
                 <Sparkles className="mt-1 h-5 w-5 text-[var(--color-gold)]" />
-                <p className="text-sm leading-7 text-[var(--color-muted)]">
+                <p className="text-sm leading-6 text-[var(--color-muted)] md:leading-7">
                   {productType === "wellness-kit"
                     ? "This page is designed to make the system feel complete, premium, and easy to understand in one screen."
                     : "This page keeps support products clear, useful, and easy to pair with the main wellness kits."}
@@ -326,7 +339,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
         <section className="mt-16 section-frame p-6 md:p-8">
           <div className="max-w-2xl">
             <p className="eyebrow">FAQ</p>
-            <h2 className="mt-3 font-serif-display text-4xl text-[var(--color-ink)]">
+            <h2 className="mt-3 font-serif-display text-[2.2rem] text-[var(--color-ink)] md:text-4xl">
               Answers before checkout.
             </h2>
           </div>
@@ -340,7 +353,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 <summary className="cursor-pointer font-medium text-[var(--color-ink)]">
                   {faq.question}
                 </summary>
-                <p className="mt-3 text-sm leading-7 text-[var(--color-muted)]">
+                <p className="mt-3 text-sm leading-6 text-[var(--color-muted)] md:leading-7">
                   {faq.answer}
                 </p>
               </details>
@@ -354,7 +367,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
           <section className="mt-16">
             <div className="max-w-2xl">
               <p className="eyebrow">Suggested Next</p>
-              <h2 className="mt-3 font-serif-display text-4xl text-[var(--color-ink)]">
+              <h2 className="mt-3 font-serif-display text-[2.2rem] text-[var(--color-ink)] md:text-4xl">
                 Complementary picks for this ritual.
               </h2>
             </div>

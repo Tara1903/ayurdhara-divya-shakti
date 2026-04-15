@@ -12,19 +12,19 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <section className="page-shell section-space">
-      <div className="poster-surface rounded-[40px] px-6 py-10 md:px-10 md:py-14">
+      <div className="poster-surface rounded-[32px] px-5 py-8 md:rounded-[40px] md:px-10 md:py-14">
         <div className="grid gap-8 lg:grid-cols-[1fr_0.9fr] lg:items-end">
           <div className="space-y-5">
             <p className="eyebrow">Contact</p>
-            <h1 className="font-serif-display text-5xl leading-[0.92] text-[var(--color-ink)] md:text-6xl">
+            <h1 className="font-serif-display text-[2.4rem] leading-[0.96] text-[var(--color-ink)] md:text-6xl">
               Need help choosing the right wellness kit?
             </h1>
-            <p className="max-w-2xl text-base leading-8 text-[var(--color-muted)]">
+            <p className="max-w-2xl text-sm leading-6 text-[var(--color-muted)] md:text-base md:leading-8">
               Reach out for product guidance, order help, or questions about how the 9-in-1 ritual works.
             </p>
           </div>
 
-          <div className="glass-panel rounded-[30px] p-6">
+          <div className="glass-panel rounded-[28px] p-5 md:rounded-[30px] md:p-6">
             <div className="grid gap-5">
               <div className="flex items-start gap-4">
                 <span className="grid h-11 w-11 place-items-center rounded-full bg-[rgba(46,125,50,0.12)] text-[var(--color-forest)]">

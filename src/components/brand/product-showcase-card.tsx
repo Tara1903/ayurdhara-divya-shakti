@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Heart, Star } from "lucide-react";
+import { Star } from "lucide-react";
+import { WishlistToggleButton } from "@/components/account/wishlist-toggle-button";
 import { AddToCartButton } from "@/components/brand/add-to-cart-button";
 import { getProductShowcaseMeta } from "@/lib/storefront/showcase";
 import { buttonStyles } from "@/components/ui/button";
@@ -32,9 +33,13 @@ function buildProductLabel(product: Product) {
 export function ProductShowcaseCard({
   product,
   variant = "standard",
+  wishlistActive = false,
+  wishlistRedirectTo,
 }: {
   product: Product;
   variant?: "standard" | "compact";
+  wishlistActive?: boolean;
+  wishlistRedirectTo?: string;
 }) {
   const meta = getProductShowcaseMeta(product);
   const isCompact = variant === "compact";
@@ -44,7 +49,7 @@ export function ProductShowcaseCard({
     <article
       className={cn(
         "group flex h-full flex-col overflow-hidden rounded-[30px] border border-[rgba(34,58,37,0.08)] bg-[rgba(255,255,255,0.92)] shadow-[0_18px_56px_rgba(43,46,26,0.08)]",
-        isCompact ? "min-w-[17rem] max-w-[18.25rem]" : "",
+        isCompact ? "w-full" : "",
       )}
     >
       <Link href={`/products/${product.slug}`} className="relative block overflow-hidden">
@@ -75,8 +80,13 @@ export function ProductShowcaseCard({
           </span>
         </div>
 
-        <div className="pointer-events-none absolute bottom-3 right-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/92 text-[var(--color-forest)] shadow-sm">
-          <Heart className="h-4 w-4" />
+        <div className="absolute bottom-3 right-3 z-10">
+          <WishlistToggleButton
+            productId={product.id}
+            redirectTo={wishlistRedirectTo ?? `/products/${product.slug}`}
+            active={wishlistActive}
+            compact
+          />
         </div>
       </Link>
 
@@ -95,7 +105,7 @@ export function ProductShowcaseCard({
             <h3
               className={cn(
                 "font-serif-display leading-[1.02] text-[var(--color-ink)]",
-                isCompact ? "text-[1.6rem]" : "text-[1.95rem]",
+                isCompact ? "text-[1.35rem] sm:text-[1.6rem]" : "text-[1.7rem] sm:text-[1.95rem]",
               )}
             >
               {product.name}
@@ -133,12 +143,12 @@ export function ProductShowcaseCard({
             </p>
           </div>
 
-          <div className="grid grid-cols-[1fr_auto] gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-[1fr_auto]">
             <Link
               href={`/products/${product.slug}`}
               className={buttonStyles({
                 variant: "secondary",
-                className: cn("h-11", isCompact ? "px-4" : ""),
+                className: cn("h-11 justify-center", isCompact ? "px-4" : ""),
               })}
             >
               {meta.ctaLabel}
@@ -146,7 +156,7 @@ export function ProductShowcaseCard({
             <AddToCartButton
               product={product}
               compact
-              className="h-11 min-w-[8.5rem] rounded-full px-4"
+              className="h-11 min-w-[8.5rem] rounded-full px-4 sm:w-auto"
               label="Add"
             />
           </div>

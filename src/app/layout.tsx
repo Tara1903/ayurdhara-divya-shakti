@@ -4,6 +4,7 @@ import { SiteFooter } from "@/components/brand/site-footer";
 import { SiteHeader } from "@/components/brand/site-header";
 import { StickyWhatsAppButton } from "@/components/brand/sticky-whatsapp-button";
 import { BRAND } from "@/lib/brand";
+import { getCurrentCustomer } from "@/lib/customer-auth";
 import { getSiteUrl } from "@/lib/site";
 import { Providers } from "./providers";
 import "./globals.css";
@@ -45,17 +46,19 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const customer = await getCurrentCustomer();
+
   return (
     <html lang="en" className={`${displayFont.variable} ${bodyFont.variable}`}>
       <body className="min-h-screen bg-[var(--color-background)] text-[var(--color-ink)]">
         <Providers>
           <div className="relative min-h-screen overflow-x-hidden">
-            <SiteHeader />
+            <SiteHeader customer={customer} />
             <main>{children}</main>
             <SiteFooter />
             <StickyWhatsAppButton />

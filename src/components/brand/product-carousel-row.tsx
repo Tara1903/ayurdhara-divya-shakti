@@ -26,7 +26,7 @@ export function ProductCarouselRow({
 
   function scrollRail(direction: 1 | -1) {
     railRef.current?.scrollBy({
-      left: direction * 320,
+      left: direction * 280,
       behavior: "smooth",
     });
   }
@@ -35,10 +35,10 @@ export function ProductCarouselRow({
     <section className="space-y-5">
       <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div className="space-y-2">
-          <h2 className="font-serif-display text-4xl leading-[0.96] text-[var(--color-ink)] md:text-[2.65rem]">
+          <h2 className="font-serif-display text-[2.1rem] leading-[0.97] text-[var(--color-ink)] md:text-[2.65rem]">
             {title}
           </h2>
-          <p className="max-w-2xl text-sm leading-7 text-[var(--color-muted)] md:text-base">
+          <p className="max-w-2xl text-sm leading-6 text-[var(--color-muted)] md:text-base md:leading-7">
             {subtitle}
           </p>
         </div>
@@ -63,7 +63,7 @@ export function ProductCarouselRow({
             </button>
           </div>
 
-          <Link href={href} className={buttonStyles({ variant: "secondary", className: "gap-2" })}>
+          <Link href={href} className={buttonStyles({ variant: "secondary", className: "gap-2 px-4" })}>
             View All
             <ArrowRight className="h-4 w-4" />
           </Link>
@@ -72,12 +72,12 @@ export function ProductCarouselRow({
 
       <div
         ref={railRef}
-        className="mobile-scroll-row flex snap-x snap-mandatory gap-4 overflow-x-auto pb-3"
+        className="mobile-scroll-row flex snap-x snap-mandatory gap-3 overflow-x-auto pb-3 sm:gap-4"
         tabIndex={0}
         aria-label={title}
       >
         {products.map((product) => (
-          <div key={product.id} className="snap-start">
+          <div key={product.id} className="w-[15.5rem] shrink-0 snap-start sm:w-[17rem] md:w-[18rem]">
             <ProductShowcaseCard product={product} variant="compact" />
           </div>
         ))}

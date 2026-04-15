@@ -54,10 +54,10 @@ export function HeroCarousel({ slides }: { slides: HomeHeroSlide[] }) {
     <section className="relative isolate overflow-hidden">
       <ThemeBackgroundLayer theme={activeSlide.theme} />
 
-      <div className="page-shell relative z-10 py-4 md:py-6">
-        <div className="grid min-h-[calc(100svh-10.5rem)] items-center gap-6 lg:grid-cols-[0.84fr_1.16fr]">
-          <div className="max-w-2xl space-y-6 py-4 md:space-y-7">
-            <div className="space-y-4">
+      <div className="page-shell relative z-10 py-2 md:py-6">
+        <div className="grid min-h-[calc(100svh-9.25rem)] items-center gap-5 md:gap-6 lg:grid-cols-[0.84fr_1.16fr]">
+          <div className="max-w-2xl space-y-4 py-3 md:space-y-7 md:py-4">
+            <div className="space-y-3 md:space-y-4">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="rounded-full bg-[rgba(255,255,255,0.78)] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--color-forest)]">
                   {activeSlide.eyebrow}
@@ -81,10 +81,10 @@ export function HeroCarousel({ slides }: { slides: HomeHeroSlide[] }) {
                     transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
                     className="space-y-3"
                   >
-                    <h1 className="max-w-2xl font-serif-display text-[2.8rem] leading-[0.92] text-[var(--color-ink)] sm:text-[3.6rem] md:text-[4.7rem]">
+                    <h1 className="max-w-2xl font-serif-display text-[2.25rem] leading-[0.94] text-[var(--color-ink)] sm:text-[3rem] md:text-[4.7rem]">
                       {activeSlide.title}
                     </h1>
-                    <p className="max-w-xl text-base leading-7 text-[rgba(24,35,24,0.74)] md:text-lg">
+                    <p className="max-w-xl text-sm leading-6 text-[rgba(24,35,24,0.74)] sm:text-base sm:leading-7 md:text-lg">
                       {activeSlide.subtitle}
                     </p>
                   </motion.div>
@@ -92,7 +92,22 @@ export function HeroCarousel({ slides }: { slides: HomeHeroSlide[] }) {
               </div>
             </div>
 
-            <div className="grid gap-3 sm:grid-cols-3">
+            <div className="rounded-[24px] border border-white/45 bg-white/62 p-4 shadow-[0_16px_38px_rgba(44,57,37,0.08)] backdrop-blur sm:hidden">
+              <div className="flex flex-wrap items-center gap-3 text-sm">
+                <span className="font-semibold text-[var(--color-forest)]">
+                  {formatCurrency(activeSlide.product.price)}
+                </span>
+                <span className="text-[var(--color-muted)]">•</span>
+                <span className="font-medium text-[var(--color-gold)]">Save ₹{priceSave}</span>
+                <span className="text-[var(--color-muted)]">•</span>
+                <span className="inline-flex items-center gap-1 font-medium text-[var(--color-ink)]">
+                  <Star className="h-4 w-4 fill-[var(--color-gold)] text-[var(--color-gold)]" />
+                  {meta.rating.toFixed(1)}
+                </span>
+              </div>
+            </div>
+
+            <div className="hidden gap-3 sm:grid sm:grid-cols-3">
               <div className="rounded-[24px] border border-white/45 bg-white/62 p-4 shadow-[0_16px_38px_rgba(44,57,37,0.08)] backdrop-blur">
                 <p className="text-xs uppercase tracking-[0.18em] text-[var(--color-muted)]">Price</p>
                 <p className="mt-2 text-2xl font-semibold text-[var(--color-forest)]">
@@ -112,12 +127,18 @@ export function HeroCarousel({ slides }: { slides: HomeHeroSlide[] }) {
               </div>
             </div>
 
-            <div className="flex flex-wrap gap-3">
-              <Link href={activeSlide.primaryCtaHref} className={buttonStyles({ className: "gap-2" })}>
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <Link
+                href={activeSlide.primaryCtaHref}
+                className={buttonStyles({ className: "w-full justify-center gap-2 sm:w-auto" })}
+              >
                 {activeSlide.primaryCtaLabel}
                 <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link href={activeSlide.secondaryCtaHref} className={buttonStyles({ variant: "secondary" })}>
+              <Link
+                href={activeSlide.secondaryCtaHref}
+                className={buttonStyles({ variant: "secondary", className: "w-full justify-center sm:w-auto" })}
+              >
                 {activeSlide.secondaryCtaLabel}
               </Link>
             </div>
@@ -126,14 +147,14 @@ export function HeroCarousel({ slides }: { slides: HomeHeroSlide[] }) {
               {activeSlide.benefitChips.map((chip) => (
                 <span
                   key={chip}
-                  className="rounded-full border border-white/50 bg-white/62 px-4 py-2 text-sm font-medium text-[var(--color-ink)] backdrop-blur"
+                  className="rounded-full border border-white/50 bg-white/62 px-3 py-1.5 text-xs font-medium text-[var(--color-ink)] backdrop-blur sm:px-4 sm:py-2 sm:text-sm"
                 >
                   {chip}
                 </span>
               ))}
             </div>
 
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
               {slides.map((slide, index) => (
                 <button
                   key={slide.id}
@@ -141,7 +162,7 @@ export function HeroCarousel({ slides }: { slides: HomeHeroSlide[] }) {
                   onClick={() => setActiveIndex(index)}
                   aria-label={`Show slide ${index + 1}`}
                   className={cn(
-                    "inline-flex items-center gap-2 rounded-full border px-3 py-2 text-left text-sm transition",
+                    "inline-flex items-center gap-2 rounded-full border px-2.5 py-2 text-left text-sm transition sm:px-3",
                     index === activeIndex
                       ? "border-transparent bg-[rgba(17,41,25,0.88)] text-white shadow-[0_12px_30px_rgba(25,43,27,0.14)]"
                       : "border-white/46 bg-white/56 text-[var(--color-ink)] hover:bg-white/76",
@@ -153,7 +174,7 @@ export function HeroCarousel({ slides }: { slides: HomeHeroSlide[] }) {
                       index === activeIndex ? "bg-[var(--color-gold)]" : "bg-[rgba(46,125,50,0.3)]",
                     )}
                   />
-                  <span className="max-w-32 truncate">{slide.product.category}</span>
+                  <span className="hidden max-w-32 truncate sm:inline">{slide.product.category}</span>
                 </button>
               ))}
             </div>
@@ -162,7 +183,7 @@ export function HeroCarousel({ slides }: { slides: HomeHeroSlide[] }) {
           <div className="relative">
             <div className="relative overflow-hidden rounded-[38px] border border-white/36 bg-[rgba(255,255,255,0.44)] p-3 shadow-[0_28px_90px_rgba(33,48,28,0.18)] backdrop-blur-xl md:p-4">
               <div className="relative overflow-hidden rounded-[30px]">
-                <div className="relative min-h-[24rem] md:min-h-[33rem]">
+                <div className="relative min-h-[20rem] sm:min-h-[24rem] md:min-h-[33rem]">
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={activeSlide.id}
@@ -186,15 +207,15 @@ export function HeroCarousel({ slides }: { slides: HomeHeroSlide[] }) {
 
                 <div className="absolute inset-0 bg-gradient-to-t from-[rgba(10,22,13,0.82)] via-[rgba(10,22,13,0.12)] to-transparent" />
 
-                <div className="absolute inset-x-4 top-4 flex items-center justify-between gap-3">
-                  <div className="rounded-full bg-white/92 px-4 py-2 text-sm font-semibold text-[var(--color-forest)] shadow-sm">
+                <div className="absolute inset-x-3 top-3 flex items-center justify-between gap-3 md:inset-x-4 md:top-4">
+                  <div className="rounded-full bg-white/92 px-3 py-1.5 text-xs font-semibold text-[var(--color-forest)] shadow-sm sm:px-4 sm:py-2 sm:text-sm">
                     {activeSlide.product.badge ?? meta.badge ?? "Organic"}
                   </div>
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
                       onClick={() => advanceSlide(-1)}
-                      className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/88 text-[var(--color-ink)] shadow-sm"
+                      className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/88 text-[var(--color-ink)] shadow-sm sm:h-10 sm:w-10"
                       aria-label="Previous slide"
                     >
                       <ChevronLeft className="h-5 w-5" />
@@ -202,7 +223,7 @@ export function HeroCarousel({ slides }: { slides: HomeHeroSlide[] }) {
                     <button
                       type="button"
                       onClick={() => advanceSlide(1)}
-                      className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/88 text-[var(--color-ink)] shadow-sm"
+                      className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/88 text-[var(--color-ink)] shadow-sm sm:h-10 sm:w-10"
                       aria-label="Next slide"
                     >
                       <ChevronRight className="h-5 w-5" />
@@ -210,22 +231,22 @@ export function HeroCarousel({ slides }: { slides: HomeHeroSlide[] }) {
                   </div>
                 </div>
 
-                <div className="absolute inset-x-4 bottom-4 space-y-4 rounded-[28px] border border-white/18 bg-[rgba(10,22,13,0.44)] p-5 text-white backdrop-blur-xl md:inset-x-6 md:bottom-6 md:p-6">
+                <div className="absolute inset-x-3 bottom-3 space-y-3 rounded-[24px] border border-white/18 bg-[rgba(10,22,13,0.44)] p-4 text-white backdrop-blur-xl md:inset-x-6 md:bottom-6 md:space-y-4 md:rounded-[28px] md:p-6">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
                       <p className="text-xs uppercase tracking-[0.28em] text-[var(--color-gold-soft)]">
                         {activeSlide.product.category}
                       </p>
-                      <p className="mt-2 font-serif-display text-3xl leading-[0.96] md:text-4xl">
+                      <p className="mt-2 font-serif-display text-2xl leading-[0.98] sm:text-3xl md:text-4xl">
                         {activeSlide.product.name}
                       </p>
                     </div>
-                    <div className="rounded-full bg-white/14 px-4 py-2 text-sm font-semibold text-white">
+                    <div className="rounded-full bg-white/14 px-3 py-1.5 text-xs font-semibold text-white sm:px-4 sm:py-2 sm:text-sm">
                       {formatCurrency(activeSlide.product.price)}
                     </div>
                   </div>
 
-                  <p className="max-w-2xl text-sm leading-7 text-white/84 md:text-base">
+                  <p className="max-w-2xl text-sm leading-6 text-white/84 md:text-base md:leading-7">
                     {activeSlide.product.shortBenefit}
                   </p>
 
@@ -252,7 +273,7 @@ export function HeroCarousel({ slides }: { slides: HomeHeroSlide[] }) {
               </div>
             </div>
 
-            <div className="mobile-scroll-row mt-4 flex gap-3 overflow-x-auto pb-2">
+            <div className="mobile-scroll-row mt-4 hidden gap-3 overflow-x-auto pb-2 md:flex">
               {slides.map((slide, index) => (
                 <button
                   key={`${slide.id}-thumb`}

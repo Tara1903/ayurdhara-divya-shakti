@@ -1,18 +1,42 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { submitOrderAction, type OrderActionState } from "@/app/actions/order";
 import { useCart } from "@/context/cart-context";
 import { formatCurrency } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import type { CustomerAddress, CustomerProfile } from "@/types";
 
 const initialState: OrderActionState = {};
 
-export function CheckoutForm() {
+function formatAddress(address: CustomerAddress) {
+  return [
+    address.line1,
+    address.line2,
+    `${address.city}, ${address.state} ${address.pincode}`,
+    address.country,
+  ]
+    .filter(Boolean)
+    .join(", ");
+}
+
+export function CheckoutForm({
+  profile,
+  addresses = [],
+}: {
+  profile?: CustomerProfile | null;
+  addresses?: CustomerAddress[];
+}) {
   const router = useRouter();
   const { detailedItems, subtotal, clearCart } = useCart();
   const [state, action, pending] = useActionState(submitOrderAction, initialState);
+  const defaultAddress = useMemo(
+    () => addresses.find((address) => address.isDefault) ?? addresses[0] ?? null,
+    [addresses],
+  );
+  const [selectedAddressId, setSelectedAddressId] = useState(defaultAddress?.id ?? "");
+  const [addressValue, setAddressValue] = useState(defaultAddress ? formatAddress(defaultAddress) : "");
 
   useEffect(() => {
     if (state.orderId) {
@@ -26,20 +50,30 @@ export function CheckoutForm() {
   }
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-      <form action={action} className="rounded-[32px] border border-[var(--color-line)] bg-white/92 p-6 shadow-[0_18px_60px_rgba(61,44,20,0.08)] md:p-8">
+    <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:gap-8">
+      <form action={action} className="rounded-[28px] border border-[var(--color-line)] bg-white/92 p-5 shadow-[0_18px_60px_rgba(61,44,20,0.08)] md:rounded-[32px] md:p-8">
         <div className="mb-8 space-y-2">
           <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[var(--color-gold)]">
             Cash on Delivery
           </p>
-          <h2 className="font-serif-display text-4xl text-[var(--color-ink)]">
+          <h2 className="font-serif-display text-[2rem] text-[var(--color-ink)] md:text-4xl">
             Complete your order
           </h2>
-          <p className="max-w-xl text-sm leading-7 text-[var(--color-muted)]">
+          <p className="max-w-xl text-sm leading-6 text-[var(--color-muted)] md:leading-7">
             We keep checkout simple: name, phone, address, and your selected
             order summary.
           </p>
         </div>
+
+        {profile ? (
+          <div className="mb-6 rounded-[24px] bg-[#eff8ee] px-4 py-4 text-sm leading-6 text-[var(--color-muted)] md:leading-7">
+            Signed in as <span className="font-semibold text-[var(--color-ink)]">{profile.email}</span>. We’ve prefilled your details and any saved default address.
+          </div>
+        ) : (
+          <div className="mb-6 rounded-[24px] bg-[var(--color-surface)] px-4 py-4 text-sm leading-6 text-[var(--color-muted)] md:leading-7">
+            Guest checkout is still available. Create an account later if you want saved addresses, wishlist access, and order history.
+          </div>
+        )}
 
         <div className="grid gap-5">
           <label className="grid gap-2 text-sm font-medium text-[var(--color-ink)]">
@@ -48,6 +82,18 @@ export function CheckoutForm() {
               name="customerName"
               placeholder="Your full name"
               className="rounded-2xl border border-[var(--color-line)] bg-[var(--color-surface)] px-4 py-3 outline-none"
+              defaultValue={profile?.fullName ?? ""}
+              required
+            />
+          </label>
+          <label className="grid gap-2 text-sm font-medium text-[var(--color-ink)]">
+            Email
+            <input
+              name="email"
+              type="email"
+              placeholder="you@example.com"
+              className="rounded-2xl border border-[var(--color-line)] bg-[var(--color-surface)] px-4 py-3 outline-none"
+              defaultValue={profile?.email ?? ""}
               required
             />
           </label>
@@ -57,9 +103,35 @@ export function CheckoutForm() {
               name="phone"
               placeholder="10-digit mobile number"
               className="rounded-2xl border border-[var(--color-line)] bg-[var(--color-surface)] px-4 py-3 outline-none"
+              defaultValue={profile?.phone ?? ""}
               required
             />
           </label>
+          {addresses.length ? (
+            <div className="grid gap-3">
+              <p className="text-sm font-medium text-[var(--color-ink)]">Saved Addresses</p>
+              <div className="grid gap-3">
+                {addresses.map((address) => (
+                  <button
+                    key={address.id}
+                    type="button"
+                    onClick={() => {
+                      setSelectedAddressId(address.id);
+                      setAddressValue(formatAddress(address));
+                    }}
+                    className={`rounded-[24px] border px-4 py-4 text-left text-sm ${
+                      selectedAddressId === address.id
+                        ? "border-transparent bg-[rgba(46,125,50,0.12)] text-[var(--color-forest)]"
+                        : "border-[var(--color-line)] bg-white text-[var(--color-ink)]"
+                    }`}
+                  >
+                    <p className="font-semibold">{address.label}</p>
+                    <p className="mt-2 leading-6 text-[inherit]">{formatAddress(address)}</p>
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : null}
           <label className="grid gap-2 text-sm font-medium text-[var(--color-ink)]">
             Address
             <textarea
@@ -67,9 +139,12 @@ export function CheckoutForm() {
               placeholder="House number, street, city, district, pincode"
               rows={5}
               className="rounded-[24px] border border-[var(--color-line)] bg-[var(--color-surface)] px-4 py-3 outline-none"
+              value={addressValue}
+              onChange={(event) => setAddressValue(event.target.value)}
               required
             />
           </label>
+          {selectedAddressId ? <input type="hidden" name="addressId" value={selectedAddressId} /> : null}
           <input
             type="hidden"
             name="items"
@@ -93,12 +168,12 @@ export function CheckoutForm() {
         </div>
       </form>
 
-      <aside className="rounded-[32px] border border-[var(--color-line)] bg-[var(--color-surface)] p-6 shadow-[0_18px_60px_rgba(61,44,20,0.06)] md:p-8">
+      <aside className="rounded-[28px] border border-[var(--color-line)] bg-[var(--color-surface)] p-5 shadow-[0_18px_60px_rgba(61,44,20,0.06)] md:rounded-[32px] md:p-8">
         <div className="space-y-3">
           <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[var(--color-gold)]">
             Order Summary
           </p>
-          <h3 className="font-serif-display text-3xl text-[var(--color-ink)]">
+          <h3 className="font-serif-display text-[1.9rem] text-[var(--color-ink)] md:text-3xl">
             Your selected wellness routine
           </h3>
         </div>

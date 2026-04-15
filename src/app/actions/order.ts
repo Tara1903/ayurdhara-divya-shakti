@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { getCurrentCustomer } from "@/lib/customer-auth";
 import { createOrder } from "@/lib/repositories";
 import { normalizePhone } from "@/lib/utils";
 
@@ -15,13 +16,15 @@ export async function submitOrderAction(
   formData: FormData,
 ): Promise<OrderActionState> {
   const customerName = String(formData.get("customerName") ?? "").trim();
+  const email = String(formData.get("email") ?? "").trim().toLowerCase();
   const phone = normalizePhone(String(formData.get("phone") ?? ""));
   const address = String(formData.get("address") ?? "").trim();
   const itemsRaw = String(formData.get("items") ?? "[]");
 
-  if (!customerName || phone.length !== 10 || !address) {
+  if (!customerName || !email || phone.length !== 10 || !address) {
     return {
-      error: "Please complete your name, 10-digit phone number, and delivery address.",
+      error:
+        "Please complete your name, email, 10-digit phone number, and delivery address.",
     };
   }
 
@@ -41,15 +44,20 @@ export async function submitOrderAction(
   }
 
   try {
+    const currentCustomer = await getCurrentCustomer();
     const order = await createOrder({
       customerName,
+      email,
       phone,
       address,
+      userId: currentCustomer?.id,
       items,
     });
 
     revalidatePath("/admin");
     revalidatePath("/admin/orders");
+    revalidatePath("/account");
+    revalidatePath("/account/orders");
 
     return {
       orderId: order.id,
